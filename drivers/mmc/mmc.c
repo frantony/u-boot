@@ -31,6 +31,7 @@
 #include <malloc.h>
 #include <linux/list.h>
 #include <div64.h>
+#include <asm-generic/errno.h>
 
 /* Set block count limit because of 16 bit register limit on some hardware*/
 #ifndef CONFIG_SYS_MMC_MAX_BLK_COUNT
@@ -1097,7 +1098,7 @@ int mmc_init(struct mmc *mmc)
 
 		if (err) {
 			printf("Card did not respond to voltage select!\n");
-			return UNUSABLE_ERR;
+			return ENODEV;
 		}
 	}
 

@@ -1,89 +1,107 @@
 /*
- * Control GPIO pins on the fly
+ * General Purpose Input Output commands
  *
- * Copyright (c) 2008-2011 Analog Devices Inc.
+ *  Copyright (C) 2011 RidgeRun
+ *  Todd Fischer <todd.fischer@ridgerun.com>
  *
- * Licensed under the GPL-2 or later.
+ * Copyright 2008-2009 Stefan Roese <sr@denx.de>, DENX Software Engineering
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
  */
 
 #include <common.h>
 #include <command.h>
+#include <exports.h>
 
-#include <asm/gpio.h>
+#include <gpio.h>
 
-#ifndef name_to_gpio
-#define name_to_gpio(name) simple_strtoul(name, NULL, 10)
-#endif
-
-enum gpio_cmd {
-	GPIO_INPUT,
-	GPIO_SET,
-	GPIO_CLEAR,
-	GPIO_TOGGLE,
-};
-
-static int do_gpio(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+static int do_gpio(cmd_tbl_t * cmdtp, int flag, int argc, char * const argv[])
 {
-	int gpio;
-	enum gpio_cmd sub_cmd;
-	ulong value;
-	const char *str_cmd, *str_gpio;
+	int value = 0;
+	int err = 0;
+	int gpio_pin = 0;
 
-#ifdef gpio_status
-	if (argc == 2 && !strcmp(argv[1], "status")) {
-		gpio_status();
+	if (argc < 3)
+		return cmd_usage(cmdtp);
+
+	gpio_pin = simple_strtoul(argv[2], NULL, 10);
+
+	if ((strcmp(argv[1], "get") == 0) && (argc == 3)) {
+		err = gpio_get(gpio_pin, &value);
+		if (err) {
+			printf("GPIO ERROR -- unknown pin: %d\n", gpio_pin);
+			return -1;
+		}
+
+		printf("%d", value ? 1 : 0);
 		return 0;
 	}
-#endif
 
-	if (argc != 3)
- show_usage:
-		return cmd_usage(cmdtp);
-	str_cmd = argv[1];
-	str_gpio = argv[2];
+	if ((strcmp(argv[1], "dir") == 0) && (argc == 4)) {
 
-	/* parse the behavior */
-	switch (*str_cmd) {
-		case 'i': sub_cmd = GPIO_INPUT;  break;
-		case 's': sub_cmd = GPIO_SET;    break;
-		case 'c': sub_cmd = GPIO_CLEAR;  break;
-		case 't': sub_cmd = GPIO_TOGGLE; break;
-		default:  goto show_usage;
-	}
+		if (strcmp(argv[3], "in") == 0) {
+			err = gpio_dir(gpio_pin, GPIO_DIRECTION_IN);
+			if (err) {
+				printf("GPIO ERROR -- unknown pin: %d\n", gpio_pin);
+				return -1;
+			}
 
-	/* turn the gpio name into a gpio number */
-	gpio = name_to_gpio(str_gpio);
-	if (gpio < 0)
-		goto show_usage;
+			return 0;
+		}
 
-	/* grab the pin before we tweak it */
-	if (gpio_request(gpio, "cmd_gpio")) {
-		printf("gpio: requesting pin %u failed\n", gpio);
+		if (strcmp(argv[3], "out") == 0) {
+			err = gpio_dir(gpio_pin, GPIO_DIRECTION_OUT);
+			if (err) {
+				printf("GPIO ERROR -- unknown pin: %d\n", gpio_pin);
+				return -1;
+			}
+
+			return 0;
+		}
+
+		printf("GPIO ERROR -- unknown direction (use in or out): %s\n", argv[3]);
 		return -1;
 	}
 
-	/* finally, let's do it: set direction and exec command */
-	if (sub_cmd == GPIO_INPUT) {
-		gpio_direction_input(gpio);
-		value = gpio_get_value(gpio);
-	} else {
-		switch (sub_cmd) {
-			case GPIO_SET:    value = 1; break;
-			case GPIO_CLEAR:  value = 0; break;
-			case GPIO_TOGGLE: value = !gpio_get_value(gpio); break;
-			default:          goto show_usage;
+	if ((strcmp(argv[1], "set") == 0) && (argc == 4)) {
+
+		if (strcmp(argv[3], "0") == 0) {
+			err = gpio_set(gpio_pin, 0);
+			if (err) {
+				printf("GPIO ERROR -- unknown pin: %d\n", gpio_pin);
+				return -1;
+			}
+
+			return 0;
 		}
-		gpio_direction_output(gpio, value);
+
+		if (strcmp(argv[3], "1") == 0) {
+			err = gpio_set(gpio_pin, 1);
+			if (err) {
+				printf("GPIO ERROR -- unknown pin: %d\n", gpio_pin);
+				return -1;
+			}
+
+			return 0;
+		}
+
+		printf("GPIO ERROR -- unknown value (use 0 or 1): %s\n", argv[3]);
+		return -1;
 	}
-	printf("gpio: pin %s (gpio %i) value is %lu\n",
-		str_gpio, gpio, value);
 
-	gpio_free(gpio);
-
-	return value;
+	cmd_usage(cmdtp);
+	return -1;
 }
 
-U_BOOT_CMD(gpio, 3, 0, do_gpio,
-	"input/set/clear/toggle gpio pins",
-	"<input|set|clear|toggle> <pin>\n"
-	"    - input/set/clear/toggle the specified pin");
+U_BOOT_CMD(
+	gpio, 4, 1, do_gpio,
+	"gpio commands",
+	"gpio dir gpio_pin in|out"
+		" - Configure a GPIO for input or output\n"
+	"gpio set gpio_pin 0|1"
+		" - Set GPIO output low or high\n"
+	"gpio get gpio_pin"
+		" - Get GPIO level\n"
+);
