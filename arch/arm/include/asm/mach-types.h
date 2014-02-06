@@ -434,6 +434,7 @@ extern unsigned int __machine_arch_type;
 #define MACH_TYPE_QSD8X50A_ST1_5       2627
 #define MACH_TYPE_MX23EVK              2629
 #define MACH_TYPE_AP4EVB               2630
+#define MACH_TYPE_DM365_V2R            2649
 #define MACH_TYPE_MITYOMAPL138         2650
 #define MACH_TYPE_GURUPLUG             2659
 #define MACH_TYPE_SPEAR310             2660

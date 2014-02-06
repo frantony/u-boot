@@ -253,6 +253,10 @@ endif
 # Sandbox needs the base flags and includes, so keep them around
 BASE_CPPFLAGS := $(CPPFLAGS)
 
+ifneq ($(EXTRA_CPPFLAGS),)
+CPPFLAGS += $(EXTRA_CPPFLAGS)
+endif
+
 ifneq ($(OBJTREE),$(SRCTREE))
 BASE_INCLUDE_DIRS := $(OBJTREE)/include
 endif
