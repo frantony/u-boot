@@ -153,6 +153,7 @@ ifdef CONFIG_PCI
 COBJS-$(CONFIG_CMD_PCI) += cmd_pci.o
 endif
 COBJS-y += cmd_pcmcia.o
+COBJS-$(CONFIG_PIN_MUX) += cmd_pin_mux.o
 COBJS-$(CONFIG_CMD_PORTIO) += cmd_portio.o
 COBJS-$(CONFIG_CMD_PXE) += cmd_pxe.o
 COBJS-$(CONFIG_CMD_READ) += cmd_read.o

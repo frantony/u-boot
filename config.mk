@@ -234,6 +234,10 @@ CONFIG_SYS_GENERIC_BOARD in your board config file)
 endif
 endif
 
+ifneq ($(EXTRA_CPPFLAGS),)
+CPPFLAGS += $(EXTRA_CPPFLAGS)
+endif
+
 ifneq ($(RESET_VECTOR_ADDRESS),)
 CPPFLAGS += -DRESET_VECTOR_ADDRESS=$(RESET_VECTOR_ADDRESS)
 endif
