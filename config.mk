@@ -256,6 +256,10 @@ Please undefined CONFIG_SYS_GENERIC_BOARD in your board config file)
 endif
 endif
 
+ifneq ($(EXTRA_CPPFLAGS),)
+CPPFLAGS += $(EXTRA_CPPFLAGS)
+endif
+
 ifneq ($(OBJTREE),$(SRCTREE))
 CPPFLAGS += -I$(OBJTREE)/include2 -I$(OBJTREE)/include
 endif

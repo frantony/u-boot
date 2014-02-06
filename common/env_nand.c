@@ -22,6 +22,7 @@
 #include <nand.h>
 #include <search.h>
 #include <errno.h>
+#include <asm/io.h>
 
 #if defined(CONFIG_CMD_SAVEENV) && defined(CONFIG_CMD_NAND)
 #define CMD_SAVEENV
@@ -312,6 +313,14 @@ void env_relocate_spec(void)
 	int crc1_ok = 0, crc2_ok = 0;
 	env_t *ep, *tmp_env1, *tmp_env2;
 
+	/* For DM365, if we boot from SD, do not read the env from NAND 
+	   Let's read the BOOCFG register
+	*/
+	if ((readl(0x01c40014)&0xE0) == 0x40) {
+		set_default_env("!booting from SD");
+		return;
+	}
+
 	tmp_env1 = (env_t *)malloc(CONFIG_ENV_SIZE);
 	tmp_env2 = (env_t *)malloc(CONFIG_ENV_SIZE);
 	if (tmp_env1 == NULL || tmp_env2 == NULL) {
@@ -397,10 +406,18 @@ void env_relocate_spec(void)
 	}
 #endif
 
-	ret = readenv(CONFIG_ENV_OFFSET, (u_char *)buf);
-	if (ret) {
-		set_default_env("!readenv() failed");
+	/* For DM365, if we boot from SD, do not read the env from NAND 
+	   Let's read the BOOCFG register
+	*/
+	if ((readl(0x01c40014)&0xE0) == 0x40) {
+		set_default_env("!booting from SD");
 		return;
+	} else {
+		ret = readenv(CONFIG_ENV_OFFSET, (u_char *)buf);
+		if (ret) {
+			set_default_env("!readenv() failed");
+			return;
+		}
 	}
 
 	env_import(buf, 1);

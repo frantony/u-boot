@@ -15,6 +15,7 @@
 #include <malloc.h>
 #include <linux/list.h>
 #include <div64.h>
+#include <asm-generic/errno.h>
 #include "mmc_private.h"
 
 /* Set block count limit because of 16 bit register limit on some hardware*/
@@ -1228,7 +1229,7 @@ int mmc_start_init(struct mmc *mmc)
 #if !defined(CONFIG_SPL_BUILD) || defined(CONFIG_SPL_LIBCOMMON_SUPPORT)
 			printf("Card did not respond to voltage select!\n");
 #endif
-			return UNUSABLE_ERR;
+			return ENODEV;
 		}
 	}
 

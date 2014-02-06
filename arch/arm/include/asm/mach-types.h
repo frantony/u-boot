@@ -434,6 +434,7 @@ extern unsigned int __machine_arch_type;
 #define MACH_TYPE_QSD8X50A_ST1_5       2627
 #define MACH_TYPE_MX23EVK              2629
 #define MACH_TYPE_AP4EVB               2630
+#define MACH_TYPE_DM365_V2R            2649
 #define MACH_TYPE_MITYOMAPL138         2650
 #define MACH_TYPE_GURUPLUG             2659
 #define MACH_TYPE_SPEAR310             2660
@@ -12241,6 +12242,18 @@ extern unsigned int __machine_arch_type;
 # define machine_is_dataway()	(machine_arch_type == MACH_TYPE_DATAWAY)
 #else
 # define machine_is_dataway()	(0)
+#endif
+
+#ifdef CONFIG_MACH_DM365_V2R
+# ifdef machine_arch_type
+#  undef machine_arch_type
+#  define machine_arch_type	__machine_arch_type
+# else
+#  define machine_arch_type	MACH_TYPE_DM365_V2R
+# endif
+# define machine_is_dm365_v2r()	(machine_arch_type == MACH_TYPE_DM365_V2R)
+#else
+# define machine_is_dm365_v2r()	(0)
 #endif
 
 #ifdef CONFIG_MACH_COBRAL138

@@ -1,33 +1,31 @@
 #
-# (C) Copyright 2006
+# (C) Copyright 2000, 2001, 2002
 # Wolfgang Denk, DENX Software Engineering, wd@denx.de.
+#
+# Copyright (C) 2007 Sergey Kubushyn <ksi@koi8.net>
 #
 # SPDX-License-Identifier:	GPL-2.0+
 #
 
 include $(TOPDIR)/config.mk
 
-ifneq ($(OBJTREE),$(SRCTREE))
-$(shell mkdir -p $(obj)board/$(VENDOR)/common)
-endif
+LIB	= $(obj)lib$(BOARD).o
 
-LIB	= $(obj)lib$(VENDOR).o
+COBJS	:= $(BOARD).o davinci_pin_mux.o
+SOBJS	:=
 
-ifndef CONFIG_SPL_BUILD
-COBJS	:= spr_misc.o
-SOBJS	:= spr_lowlevel_init.o
-endif
-
-COBJS-y :=
-COBJS-$(CONFIG_PIN_MUX) += davinci_pin_mux.o
-
-COBJS   += $(COBJS-y)
 SRCS	:= $(SOBJS:.o=.S) $(COBJS:.o=.c)
 OBJS	:= $(addprefix $(obj),$(COBJS))
 SOBJS	:= $(addprefix $(obj),$(SOBJS))
 
 $(LIB):	$(obj).depend $(OBJS) $(SOBJS)
 	$(call cmd_link_o_target, $(OBJS) $(SOBJS))
+
+clean:
+	rm -f $(SOBJS) $(OBJS)
+
+distclean:	clean
+	rm -f $(LIB) core *.bak $(obj).depend
 
 #########################################################################
 # This is for $(obj).depend target
