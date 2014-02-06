@@ -2629,7 +2629,7 @@ extern unsigned int __machine_arch_type;
 #define MACH_TYPE_LUX_SF9G             2646
 #define MACH_TYPE_LUX_EDK9             2647
 #define MACH_TYPE_HW90240              2648
-#define MACH_TYPE_DM365_LEOPARD        2649
+#define MACH_TYPE_DM365_V2R            2649
 #define MACH_TYPE_MITYOMAPL138         2650
 #define MACH_TYPE_SCAT110              2651
 #define MACH_TYPE_ACER_A1              2652
@@ -34717,16 +34717,16 @@ extern unsigned int __machine_arch_type;
 # define machine_is_hw90240()	(0)
 #endif
 
-#ifdef CONFIG_MACH_DM365_LEOPARD
+#ifdef CONFIG_MACH_DM365_V2R
 # ifdef machine_arch_type
 #  undef machine_arch_type
 #  define machine_arch_type	__machine_arch_type
 # else
-#  define machine_arch_type	MACH_TYPE_DM365_LEOPARD
+#  define machine_arch_type	MACH_TYPE_DM365_V2R
 # endif
-# define machine_is_dm365_leopard()	(machine_arch_type == MACH_TYPE_DM365_LEOPARD)
+# define machine_is_dm365_v2r()	(machine_arch_type == MACH_TYPE_DM365_V2R)
 #else
-# define machine_is_dm365_leopard()	(0)
+# define machine_is_dm365_v2r()	(0)
 #endif
 
 #ifdef CONFIG_MACH_MITYOMAPL138
