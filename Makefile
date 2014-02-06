@@ -1092,6 +1092,9 @@ smdk6400_config	:	unconfig
 	@$(MKCONFIG) smdk6400 arm arm1176 smdk6400 samsung s3c64xx
 	@echo "CONFIG_NAND_U_BOOT = y" >> $(obj)include/config.mk
 
+davinci_dm365v2r_config :	unconfig
+	@$(MKCONFIG) $(@:_config=) arm arm926ejs dm365v2r davinci davinci
+
 #========================================================================
 # Nios
 #========================================================================
