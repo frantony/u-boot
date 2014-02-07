@@ -6,6 +6,7 @@
 #
 
 TOOLSUBDIRS = kernel-doc
+TOOLSUBDIRS = uflash
 
 #
 # Include this after HOSTOS HOSTARCH check

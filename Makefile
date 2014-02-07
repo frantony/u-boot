@@ -795,6 +795,7 @@ clean:
 	       $(obj)tools/env/fw_printenv				  \
 	       $(obj)tools/envcrc					  \
 	       $(obj)tools/gdb/{gdbcont,gdbsend}			  \
+	       $(obj)tools/uflash/uflash	  \
 	       $(obj)tools/gen_eth_addr    $(obj)tools/img2srec		  \
 	       $(obj)tools/dump{env,}image		  \
 	       $(obj)tools/mk{env,}image   $(obj)tools/mpc86x_clk	  \
