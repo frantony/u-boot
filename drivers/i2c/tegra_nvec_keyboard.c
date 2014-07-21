@@ -26,7 +26,7 @@
 
 static unsigned short *code_tabs[] = { code_tab_102us, extcode_tab_us102 };
 
-circbuf_t key_buf = { 0, 0, NULL, NULL, NULL, NULL };
+static circbuf_t key_buf = { 0, 0, NULL, NULL, NULL, NULL };
 
 /* nvec commands */
 static char enable_kbd[] = { NVEC_KBD, ENABLE_KBD };
