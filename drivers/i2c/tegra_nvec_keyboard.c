@@ -24,6 +24,8 @@
 #include <asm/arch-tegra/tegra_nvec.h>
 
 
+static unsigned short *code_tabs[] = { code_tab_102us, extcode_tab_us102 };
+
 circbuf_t key_buf = { 0, 0, NULL, NULL, NULL, NULL };
 
 /* nvec commands */

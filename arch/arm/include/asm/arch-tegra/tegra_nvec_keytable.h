@@ -305,6 +305,4 @@ static unsigned short extcode_tab_us102[] = {
 	0,
 };
 
-static unsigned short *code_tabs[] = { code_tab_102us, extcode_tab_us102 };
-
 #endif /* _TEGRA_NVEC_KEYTABLE_H_ */
